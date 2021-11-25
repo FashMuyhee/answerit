@@ -6,8 +6,8 @@ const App = () => {
   const theme = extendTheme({
     colors: {
       bg: 'white',
-      main: '#FF1B1B',
-      accent: '#FF8D8D',
+      main: '#8B80B6',
+      accent: '#9E95C2',
       bgGrey: '#F6F6F6',
       textMute: '#677994',
       darkGrey: '#494949',
