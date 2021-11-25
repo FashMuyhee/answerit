@@ -5,16 +5,25 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --port=6000",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "adb-connect": "adb reverse tcp:8081 tcp:8081",
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && gradlew assembleDebug && cd ..",
+    "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && gradlew assembleRelease && cd .."
   },
   "dependencies": {
+    "@react-native-masked-view/masked-view": "^0.2.6",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/stack": "^6.0.11",
     "native-base": "3.2.1",
     "react": "17.0.1",
     "react-native": "0.64.2",
-    "react-native-safe-area-context": "^3.2.0",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.9.0",
     "react-native-svg": "^12.1.1",
+    "react-native-vector-icons": "^9.0.0",
     "styled-components": "^5.3.0",
     "styled-system": "^5.1.5"
   },
