@@ -3,12 +3,12 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-import colors from '@utils/colors';
 import Home from '../screens/student/home';
-
+import {useTheme} from 'native-base';
 const Stack = createStackNavigator();
 
 const StudentStackNavigator = () => {
+  const {colors} = useTheme();
   return (
     <Stack.Navigator
       initialRouteName="home"
@@ -17,12 +17,14 @@ const StudentStackNavigator = () => {
         headerShown: true,
         presentation: 'card',
         headerTitleStyle: {
-          color: colors.secondary,
-          fontFamily: 'Raleway-Bold',
+          fontFamily: 'Nunito-SemiBold',
           textTransform: 'capitalize',
         },
         headerTitleAlign: 'center',
-        headerTintColor: colors.primary,
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: colors.main,
+        },
       }}>
       <Stack.Screen
         name="home"
