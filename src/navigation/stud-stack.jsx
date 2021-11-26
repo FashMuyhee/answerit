@@ -5,6 +5,9 @@ import {
 } from '@react-navigation/stack';
 import Home from '../screens/student/home';
 import {useTheme} from 'native-base';
+import Result from '../screens/student/results';
+import Quiz from '../screens/student/quiz';
+
 const Stack = createStackNavigator();
 
 const StudentStackNavigator = () => {
@@ -13,7 +16,7 @@ const StudentStackNavigator = () => {
     <Stack.Navigator
       initialRouteName="home"
       screenOptions={{
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
         headerShown: true,
         presentation: 'card',
         headerTitleStyle: {
@@ -30,9 +33,17 @@ const StudentStackNavigator = () => {
         name="home"
         component={Home}
         options={{
-          headerTitle: 'Welcome',
+          headerTitle: 'Dashboard',
         }}
       />
+      <Stack.Screen
+        name="results"
+        component={Result}
+        options={{
+          headerTitle: 'Quiz Results',
+        }}
+      />
+      <Stack.Screen name="quiz" component={Quiz} />
     </Stack.Navigator>
   );
 };

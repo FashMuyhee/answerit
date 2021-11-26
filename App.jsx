@@ -5,9 +5,9 @@ import RootNavigator from './src/navigation/root-navigation';
 const App = () => {
   const theme = extendTheme({
     colors: {
-      bg: 'white',
-      main: '#8B80B6',
-      accent: '#9E95C2',
+      bg: '#f7f9fc',
+      main: '#65569F',
+      accent: '#f3e8ff',
       bgGrey: '#F6F6F6',
       textMute: '#677994',
       darkGrey: '#494949',

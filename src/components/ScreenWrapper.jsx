@@ -2,15 +2,15 @@ import React from 'react';
 import {SafeAreaView, StatusBar} from 'react-native';
 import {useTheme} from 'native-base';
 
-const ScreenWrapper = ({children, pad}) => {
+const ScreenWrapper = ({children, noPad}) => {
   const {colors} = useTheme();
   return (
     <SafeAreaView
       style={{
-        paddingVertical: pad && 10,
-        paddingHorizontal: pad && 25,
+        paddingVertical: noPad ? 0 : 10,
+        paddingHorizontal: noPad ? 0 : 25,
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: colors.bg,
       }}>
       <StatusBar backgroundColor={colors.main} barStyle="light-content" />
       {children}
