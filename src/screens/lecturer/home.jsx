@@ -1,7 +1,8 @@
 import React from 'react';
-import {Heading, ScrollView, HStack, Text} from 'native-base';
+import {Heading, ScrollView, HStack, Text, Fab} from 'native-base';
 import {ScreenWrapper, QuizCard} from '../../components';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const HeaderTitle = ({title, route}) => {
   const {navigate} = useNavigation();
@@ -13,9 +14,6 @@ const HeaderTitle = ({title, route}) => {
       justifyContent={'space-between'}
       mt="4">
       <Heading color="main">{title}</Heading>
-      <Text color="main" onPress={() => navigate(route)}>
-        View More
-      </Text>
     </HStack>
   );
 };
@@ -27,32 +25,27 @@ const Home = ({navigation}) => {
         <Heading my="4" textAlign={'center'}>
           Welcome James 👋👋👋
         </Heading>
-        <HeaderTitle title={'Recent Quiz'} route="results" />
-        <QuizCard title="Mathematics Qicz" disable />
-        <QuizCard title="Mathematics Qicz" disable />
-        <QuizCard title="Mathematics Qicz" disable />
-        <HeaderTitle title={'Live Quiz'} />
+        <HeaderTitle title={'Your Quiz'} route="results" />
         <QuizCard
           title="Mathematics Qicz"
           onPress={() =>
-            navigation.navigate('quiz', {quiz: '"Mathematics Qicz'})
+            navigation.navigate('result', {quiz: 'athematics Qicz'})
           }
         />
         <QuizCard
           title="Mathematics Qicz"
           onPress={() =>
-            navigation.navigate('quiz', {quiz: '"Mathematics Qicz'})
+            navigation.navigate('result', {quiz: 'Mathematics Qicz'})
           }
         />
         <QuizCard
           title="Mathematics Qicz"
           onPress={() =>
-            navigation.navigate('quiz', {quiz: '"Mathematics Qicz'})
+            navigation.navigate('result', {quiz: 'Mathematics Qicz'})
           }
         />
       </ScrollView>
     </ScreenWrapper>
   );
 };
-
 export default Home;

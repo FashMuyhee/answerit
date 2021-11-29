@@ -1,21 +1,16 @@
-import React from 'react';
-import {
-  Box,
-  View,
-  Text,
-  VStack,
-  Heading,
-  HStack,
-  useTheme,
-  Pressable,
-} from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, {useEffect} from 'react';
+import {View, Text, Box, VStack, Heading, HStack} from 'native-base';
 
-const QuizCard = ({title, disable, onPress}) => {
-  const {colors} = useTheme();
+const ResultDetails = ({navigation, route}) => {
+  const {quiz} = route.params;
 
+  useEffect(() => {
+    navigation.setOptions({
+      title: quiz + ' Result',
+    });
+  }, [quiz]);
   return (
-    <Pressable disabled={disable} onPress={onPress}>
+    <View px="4">
       <Box
         rounded="md"
         h="24"
@@ -42,24 +37,23 @@ const QuizCard = ({title, disable, onPress}) => {
             textAlign="center"
             fontWeight="bold"
             textTransform={'uppercase'}>
-            {title.charAt(0)}
+            1
           </Text>
         </View>
         <VStack w="75%" h="4/5">
           <Heading fontSize="18px" color="darkBlue.800">
-            {title}
+            James Charles
           </Heading>
           <HStack space="2">
             <Text>10/10</Text>
-            <Icon name="event" size={20} color={colors.purple[400]} />
             <Text color="textMute" fontStyle={'italic'}>
               2 Days
             </Text>
           </HStack>
         </VStack>
       </Box>
-    </Pressable>
+    </View>
   );
 };
 
-export default QuizCard;
+export default ResultDetails;
