@@ -1,14 +1,24 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
+import AuthStackNavigator from './auth-stack';
 import LecturerStackNavigator from './lect-stack';
 import StudentStackNavigator from './stud-stack';
+import {useContext} from 'react';
+import {AuthContent} from '../context/AuthContext';
 
 const RootNavigator = () => {
-  // const {onBoardingEnd, isLoggedIn} = useSelector(state => state.general);
+  const {userRole, user} = useContext(AuthContent);
 
   const Navigator = () => {
-    // return <StudentStackNavigator />;
-    return <LecturerStackNavigator/>
+    if (user) {
+      if (userRole == 'student') {
+        return <StudentStackNavigator />;
+      } else {
+        return <LecturerStackNavigator />;
+      }
+    } else {
+      return <AuthStackNavigator />;
+    }
   };
 
   return (

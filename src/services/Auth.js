@@ -1,5 +1,4 @@
 import auth from '@react-native-firebase/auth';
-import validateEmail from '../helpers/validateEmail';
 import firestore from '@react-native-firebase/firestore';
 
 class AuthService {
@@ -52,7 +51,7 @@ class AuthService {
     phone,
     dept
   ) => {
-    if (!email || !password || !fname || !lname || !address || !phone || !dept) {
+    if (!email || !password || !fname || !lname || !phone || !dept) {
       return { isError: true, msg: 'All Field are required' };
     }
 
@@ -75,7 +74,6 @@ class AuthService {
                 .set({
                   fname,
                   email,
-                  address,
                   lname,
                   phone,
                   createdAt: firestore.FieldValue.serverTimestamp(),
@@ -114,7 +112,7 @@ class AuthService {
     dept,
     level, matric_no
   ) => {
-    if (!email || !password || !fname || !lname || !address || !phone || !dept ||
+    if (!email || !password || !fname || !lname || !phone || !dept ||
       !level || !matric_no) {
       return { isError: true, msg: 'All Field are required' };
     }
@@ -138,7 +136,6 @@ class AuthService {
                 .set({
                   fname,
                   email,
-                  address,
                   lname,
                   phone, dept,
                   level, matric_no,
@@ -208,15 +205,6 @@ class AuthService {
       } else {
         return [];
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  checkEmailVerifyStatus = async () => {
-    try {
-      const verified = auth().currentUser?.emailVerified;
-      return verified;
     } catch (error) {
       console.log(error);
     }

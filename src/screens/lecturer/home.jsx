@@ -1,8 +1,9 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {Heading, ScrollView, HStack, Text, Fab} from 'native-base';
 import {ScreenWrapper, QuizCard} from '../../components';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContent } from '../../context/AuthContext';
 
 const HeaderTitle = ({title, route}) => {
   const {navigate} = useNavigation();
@@ -19,11 +20,13 @@ const HeaderTitle = ({title, route}) => {
 };
 
 const Home = ({navigation}) => {
+  const {user} = useContext(AuthContent);
+
   return (
     <ScreenWrapper noPad>
       <ScrollView contentContainerStyle={{paddingHorizontal: 20}}>
         <Heading my="4" textAlign={'center'}>
-          Welcome James 👋👋👋
+          Welcome {user.lname} 👋👋👋
         </Heading>
         <HeaderTitle title={'Your Quiz'} route="results" />
         <QuizCard

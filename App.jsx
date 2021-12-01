@@ -1,6 +1,7 @@
 import React from 'react';
 import {NativeBaseProvider, extendTheme} from 'native-base';
 import RootNavigator from './src/navigation/root-navigation';
+import {AuthContentProvider} from './src/context/AuthContext';
 
 const App = () => {
   const theme = extendTheme({
@@ -81,7 +82,9 @@ const App = () => {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <RootNavigator />
+      <AuthContentProvider>
+        <RootNavigator />
+      </AuthContentProvider>
     </NativeBaseProvider>
   );
 };

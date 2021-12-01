@@ -6,19 +6,20 @@ export const AuthContent = createContext(null);
 export const AuthContentProvider = ({children}) => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState('');
 
-  const onAuthStateChanged = user => {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  };
+  // const onAuthStateChanged = user => {
+  //   setUser(user);
+  //   if (initializing) setInitializing(false);
+  // };
 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+  // useEffect(() => {
+  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber;
+  // }, []);
 
   return (
-    <AuthContent.Provider value={{user, initializing}}>
+    <AuthContent.Provider value={{user, userRole,setUser, setUserRole, initializing}}>
       {children}
     </AuthContent.Provider>
   );

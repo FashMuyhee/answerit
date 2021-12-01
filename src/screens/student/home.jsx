@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Heading, ScrollView, HStack, Text} from 'native-base';
 import {ScreenWrapper, QuizCard} from '../../components';
 import {useNavigation} from '@react-navigation/native';
+import {AuthContent} from '../../context/AuthContext';
 
 const HeaderTitle = ({title, route}) => {
   const {navigate} = useNavigation();
@@ -21,11 +22,12 @@ const HeaderTitle = ({title, route}) => {
 };
 
 const Home = ({navigation}) => {
+  const {user} = useContext(AuthContent);
   return (
     <ScreenWrapper noPad>
       <ScrollView contentContainerStyle={{paddingHorizontal: 20}}>
         <Heading my="4" textAlign={'center'}>
-          Welcome James 👋👋👋
+          Welcome {user.lname} 👋👋👋
         </Heading>
         <HeaderTitle title={'Recent Quiz'} route="results" />
         <QuizCard title="Mathematics Qicz" disable />
