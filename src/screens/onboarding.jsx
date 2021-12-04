@@ -50,7 +50,7 @@ const OnboardingScreen = ({navigation}) => {
           px="10px">
           <View>
             <Text
-              onPress={() => navigation.navigate('lect_login')}
+              onPress={() => navigation.navigate('student_login')}
               textAlign="center"
               fontSize="20px"
               color="main">

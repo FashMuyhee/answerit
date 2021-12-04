@@ -53,6 +53,46 @@ class QuizService {
 
   }
 
+  fetchQuizzes = async () => {
+    try {
+      const ref = await firestore()
+        .collection('quizzes').get()
+
+      const data = ref.docs.map((item) => {
+        return {
+          id: item.id,
+          createdAt: item.data().createdAt,
+          quizTitle: item.data().quizTitle
+        }
+      })
+
+      return { status: true, data }
+
+    } catch (error) {
+      const message = { msg: 'Something Went wrong', status: false }
+      console.log(error)
+      return message
+
+    }
+
+  }
+
+  fetchQuizDetail = async (id) => {
+    try {
+      const ref = await firestore()
+        .collection('quizzes').doc(id).get()
+      const data = ref.data()
+      return { status: true, data }
+
+    } catch (error) {
+      const message = { msg: 'Something Went wrong', status: false }
+      console.log(error)
+      return message
+
+    }
+
+  }
+
 }
 
 export default new QuizService();
