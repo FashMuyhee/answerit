@@ -12,10 +12,11 @@ import {
   Select,
   CheckIcon,
   VStack,
+  useToast,
 } from 'native-base';
 import {ScreenWrapper} from '../../components';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Feather';
+import QuizService from '../../services/Quiz';
 
 const HeaderTitle = ({title, route}) => {
   const {navigate} = useNavigation();
@@ -39,6 +40,8 @@ const CreateQuiz = ({navigation}) => {
   const [modal, setModal] = useState(true);
   const [duration, setDuration] = useState('0');
   const [durationTime, setDurationTime] = useState('min');
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleMoreQuestion = () => {
     const currentQuestions = [...questions];
@@ -70,11 +73,24 @@ const CreateQuiz = ({navigation}) => {
     setQuestion(currentQuestions);
   };
 
-  const handleSubmit = () => {
-    console.log(questions);
-  };
+  const handleSubmit = async () => {
+    setLoading(true);
+    const res = await QuizService.createQuiz({
+      quiz: questions,
+      quizTitle,
+      duration,
+      durationTime,
+    });
 
-  useEffect(() => {}, []);
+    if (res.status) {
+      setQuestion([{question: '', options: [], answer: ''}]);
+      setQuizTitle('')
+      setDuration('0')
+      setDurationTime('minute')
+    }
+    setLoading(false);
+    toast.show({title: res.msg, placement: 'bottom'});
+  };
 
   return (
     <ScreenWrapper noPad>
@@ -156,6 +172,8 @@ const CreateQuiz = ({navigation}) => {
           h="50px"
           my="4"
           colorScheme="green"
+          isLoading={loading}
+          isDisabled={loading}
           onPress={handleSubmit}
           _text={{
             fontSize: 20,

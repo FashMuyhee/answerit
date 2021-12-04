@@ -1,13 +1,12 @@
-import React,{useContext} from 'react';
-import {Heading, ScrollView, HStack, Text, Fab} from 'native-base';
+import React, {useContext, useEffect, useState} from 'react';
+import {Heading, View, HStack, Text, FlatList} from 'native-base';
 import {ScreenWrapper, QuizCard} from '../../components';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContent } from '../../context/AuthContext';
+import {AuthContent} from '../../context/AuthContext';
+import QuizService from '../../services/Quiz';
+import moment from 'moment';
 
-const HeaderTitle = ({title, route}) => {
-  const {navigate} = useNavigation();
-
+const HeaderTitle = ({title}) => {
   return (
     <HStack
       alignItems="center"
@@ -21,33 +20,40 @@ const HeaderTitle = ({title, route}) => {
 
 const Home = ({navigation}) => {
   const {user} = useContext(AuthContent);
+  const [quizzes, setQuizzes] = useState([]);
+
+  const getMyQuiz = async () => {
+    const res = await QuizService.fetchMyQuizzes();
+    if (res.status) {
+      setQuizzes(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getMyQuiz();
+  }, []);
 
   return (
     <ScreenWrapper noPad>
-      <ScrollView contentContainerStyle={{paddingHorizontal: 20}}>
-        <Heading my="4" textAlign={'center'}>
-          Welcome {user.lname} 👋👋👋
-        </Heading>
+      <Heading my="4" textAlign={'center'}>
+        Welcome {user.lname} 👋👋👋
+      </Heading>
+      <View ml="4">
         <HeaderTitle title={'Your Quiz'} route="results" />
-        <QuizCard
-          title="Mathematics Qicz"
-          onPress={() =>
-            navigation.navigate('result', {quiz: 'athematics Qicz'})
-          }
-        />
-        <QuizCard
-          title="Mathematics Qicz"
-          onPress={() =>
-            navigation.navigate('result', {quiz: 'Mathematics Qicz'})
-          }
-        />
-        <QuizCard
-          title="Mathematics Qicz"
-          onPress={() =>
-            navigation.navigate('result', {quiz: 'Mathematics Qicz'})
-          }
-        />
-      </ScrollView>
+      </View>
+      <FlatList
+        data={quizzes}
+        contentContainerStyle={{paddingHorizontal: 20}}
+        renderItem={({item}) => (
+          <QuizCard
+            title={item.quizTitle}
+            onPress={() =>
+              navigation.navigate('result', {quiz: item.quizTitle, id: item.id})
+            }
+            date={moment(item?.createdAt).fromNow()}
+          />
+        )}
+      />
     </ScreenWrapper>
   );
 };
