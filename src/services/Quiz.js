@@ -129,7 +129,24 @@ class QuizService {
 
   }
 
-  submitScore = async ({ quizId, score, quizTitle }) => {
+  resultPerQuiz = async (quizId) => {
+    try {
+      const ref = await firestore()
+        .collection('score_board').where('quizId', '==', quizId).get()
+      const data = ref.docs.map((item, key) => {
+        return { key: key + 1, ...item.data() }
+      })
+      return { status: true, data }
+
+    } catch (error) {
+      const message = { msg: 'Something Went wrong', status: false }
+      console.log(error)
+      return message
+
+    }
+  }
+
+  submitScore = async ({ quizId, score, quizTitle, matricNo }) => {
     const user = auth().currentUser
     try {
       const ref = await firestore()
@@ -139,7 +156,8 @@ class QuizService {
           score,
           createdAt: moment.now(),
           uid: user.uid,
-          quizTitle
+          quizTitle,
+          studentName: user.displayName
         })
       const message = { msg: 'Submitted Successfully', status: true }
       return message
