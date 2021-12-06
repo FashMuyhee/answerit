@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Heading, FlatList,View, HStack, Text} from 'native-base';
+import {Heading, FlatList, View, HStack, Text,Center} from 'native-base';
 import {ScreenWrapper, QuizCard} from '../../components';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContent} from '../../context/AuthContext';
@@ -26,6 +26,7 @@ const HeaderTitle = ({title, route}) => {
 const Home = ({navigation}) => {
   const {user} = useContext(AuthContent);
   const [quizzes, setQuizzes] = useState([]);
+  const [scores, setScores] = useState([]);
 
   const getMyQuiz = async () => {
     const res = await QuizService.fetchQuizzes();
@@ -34,8 +35,15 @@ const Home = ({navigation}) => {
     }
   };
 
+  const getMyScore = async () => {
+    const res = await QuizService.myScoreSheet(res => {
+      setScores(res);
+    });
+  };
+
   useEffect(() => {
     getMyQuiz();
+    getMyScore();
   }, []);
 
   return (
@@ -44,11 +52,12 @@ const Home = ({navigation}) => {
         Welcome {user.lname} 👋👋👋
       </Heading>
       <View px="4">
-        <HeaderTitle title={'Recent Quiz'} route="results" />
+        <HeaderTitle title={'Recent Quiz'} />
       </View>
       <FlatList
         data={quizzes}
         contentContainerStyle={{paddingHorizontal: 20}}
+        keyExtractor={(item, key) => key.toString()}
         renderItem={({item}) => (
           <QuizCard
             title={item.quizTitle}
@@ -56,6 +65,26 @@ const Home = ({navigation}) => {
               navigation.navigate('quiz', {quiz: item.quizTitle, id: item.id})
             }
             date={moment(item?.createdAt).fromNow()}
+          />
+        )}
+        ListEmptyComponent={() => (
+          <Center mt="4">
+            <Text fontSize="23px">Nothing To Show</Text>
+          </Center>
+        )}
+      />
+      <View px="4">
+        <HeaderTitle title={'Quiz Result'} route="results" />
+      </View>
+      <FlatList
+        data={scores}
+        contentContainerStyle={{paddingHorizontal: 20}}
+        keyExtractor={(item, key) => key.toString()}
+        renderItem={({item}) => (
+          <QuizCard
+            title={item.quizTitle}
+            date={moment(item?.createdAt).fromNow()}
+            score={item.score}
           />
         )}
       />

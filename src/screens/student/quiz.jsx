@@ -1,70 +1,132 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, HStack, Circle, Button} from 'native-base';
+import {
+  View,
+  Text,
+  HStack,
+  Circle,
+  Button,
+  Pressable,
+  useToast,
+} from 'native-base';
 import {ScreenWrapper} from '../../components';
 import QuizService from '../../services/Quiz';
 
 const Option = ({onPress, option, index, selected}) => {
+  const letter = n => String.fromCharCode(97 + n);
+
   return (
-    <HStack
-      minH="50px"
-      w="full"
-      bg={selected ? 'main' : 'white'}
-      shadow={selected ? 9 : 0}
-      my="10px"
-      p="5px"
-      rounded="lg"
-      space="4">
-      <Circle
+    <Pressable onPress={() => onPress(true)}>
+      <HStack
+        minH="50px"
+        w="full"
         bg={selected ? 'main' : 'white'}
-        size={'sm'}
-        borderWidth={1.5}
-        borderColor={selected ? 'white' : 'main'}>
+        shadow={selected ? 9 : 0}
+        my="10px"
+        p="10px"
+        rounded="lg"
+        space="4">
+        <Circle
+          bg={selected ? 'main' : 'white'}
+          size={'xs'}
+          borderWidth={1.5}
+          borderColor={selected ? 'white' : 'main'}>
+          <Text
+            color={selected ? 'white' : 'main'}
+            textTransform={'uppercase'}
+            fontWeight="bold"
+            fontSize="17px">
+            {letter(index)}
+          </Text>
+        </Circle>
         <Text
           color={selected ? 'white' : 'main'}
-          textTransform={'uppercase'}
-          fontWeight="bold"
-          fontSize="17px">
-          a
+          fontWeight="normal"
+          flexWrap="wrap"
+          fontSize="13px"
+          alignSelf={'center'}>
+          {option}
         </Text>
-      </Circle>
-      <Text
-        color={selected ? 'white' : 'main'}
-        fontWeight="normal"
-        flexWrap="wrap"
-        fontSize="13px"
-        alignSelf={'center'}>
-        {option}
-      </Text>
-    </HStack>
+      </HStack>
+    </Pressable>
   );
 };
 const Quiz = ({navigation, route}) => {
   const {quiz, id} = route.params;
   const [quizQuestions, setQuizQuestions] = useState({});
   const [index, setIndex] = useState(0);
-console.log(quizQuestions)
-  // const [currentQuiz,setQuiz] =useState({})
-  // const [currentQuiz,setQuiz] =useState({})
+  const [answers, setAnswers] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [quizId, setQuizId] = useState('');
+
+
+  const toast = useToast();
 
   const getQuiz = async () => {
     const res = await QuizService.fetchQuizDetail(id);
     if (res.status) {
+      console.log(res.data);
       setQuizQuestions(res.data.quiz);
+      setQuizId(res.data.id);
+      const quizzes = res.data.quiz;
+      const correct = quizzes.map(item => {
+        return item.answer;
+      });
+      setAnswers(correct);
     }
   };
 
-  /**
-   *
-   *handle next question
-   */
-  const handleNext = () => {
-    // if (!selected) {
-    //   toast.error("Select an Option To Continue");
-    //   return;
-    // }
-
-    setIndex(index => index + 1);
+  const handleSelectAnswer = (index, option, state) => {
+    setSelectedOption(option);
   };
+
+  const handleNext = (next = true) => {
+    if (selectedOption.length < 1) {
+      toast.show({
+        title: 'Select an Option To Continue',
+        placement: 'bottom',
+      });
+      return;
+    }
+
+    const myAns = [...selectedAnswers];
+    myAns.push(selectedOption);
+    setSelectedAnswers(myAns);
+    setSelectedOption('');
+    if (next) {
+      setIndex(index => index + 1);
+      return;
+    }
+  };
+
+  const handleSubmit = async () => {
+    handleNext(false);
+    const correctAns = [...answers];
+    const myAns = [...selectedAnswers];
+    let score = 0;
+    for (let index = 0; index < correctAns.length; index++) {
+      const x = correctAns[index];
+      const y = myAns[index];
+      if (x === y) {
+        score++;
+      }
+    }
+
+    const res = await QuizService.submitScore({
+      quizId,
+      score: `${score}/${correctAns.length}`,
+      quizTitle:quiz
+    });
+    if (res.status) {
+      toast.show({
+        title: res.msg,
+        placement: 'bottom',
+      });
+      navigation.goBack();
+    }
+    // send score to frebase
+  };
+
   useEffect(() => {
     navigation.setOptions({
       title: quiz,
@@ -90,21 +152,29 @@ console.log(quizQuestions)
         </Text>
       </View>
       <View mt="4">
-        {quizQuestions[index]?.options?.map((item,key)=><Option selected key={key} option={item}/>)}
+        {quizQuestions[index]?.options?.map((item, key) => (
+          <Option
+            key={key}
+            option={item}
+            index={key}
+            selected={selectedOption === item ? true : false}
+            onPress={state => handleSelectAnswer(key, item, state)}
+          />
+        ))}
       </View>
       <Button
         alignItems="center"
-        onPress={handleNext}
+        onPress={index + 1 == quizQuestions?.length ? handleSubmit : handleNext}
         h="50px"
         my="4"
-        colorScheme="orange"
+        colorScheme={index + 1 == quizQuestions?.length ? 'success' : 'orange'}
         _text={{
           fontSize: 20,
           fontWeight: 'bold',
           marginBottom: 2,
           color: 'white',
         }}>
-        Next
+        {index + 1 == quizQuestions?.length ? 'Submit' : 'Next'}
       </Button>
     </ScreenWrapper>
   );

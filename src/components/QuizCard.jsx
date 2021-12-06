@@ -11,7 +11,7 @@ import {
 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const QuizCard = ({title, disable, onPress,date}) => {
+const QuizCard = ({title, disable, onPress,date,score}) => {
   const {colors} = useTheme();
 
   return (
@@ -50,7 +50,7 @@ const QuizCard = ({title, disable, onPress,date}) => {
             {title}
           </Heading>
           <HStack space="2">
-            <Text>10/10</Text>
+            <Text>{score}</Text>
             <Icon name="event" size={20} color={colors.purple[400]} />
             <Text color="textMute" fontStyle={'italic'}>
               {date}
