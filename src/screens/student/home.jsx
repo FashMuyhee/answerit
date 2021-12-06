@@ -69,7 +69,7 @@ const Home = ({navigation}) => {
         )}
         ListEmptyComponent={() => (
           <Center mt="4">
-            <Text fontSize="23px">Nothing To Show</Text>
+            <Text fontSize="23px">No recent quiz</Text>
           </Center>
         )}
       />

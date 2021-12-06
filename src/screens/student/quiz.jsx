@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'native-base';
 import {ScreenWrapper} from '../../components';
 import QuizService from '../../services/Quiz';
+import {AuthContent} from '../../context/AuthContext';
 
 const Option = ({onPress, option, index, selected}) => {
   const letter = n => String.fromCharCode(97 + n);
@@ -58,14 +59,13 @@ const Quiz = ({navigation, route}) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
   const [quizId, setQuizId] = useState('');
-
+  const {user} = useContext(AuthContent);
 
   const toast = useToast();
 
   const getQuiz = async () => {
     const res = await QuizService.fetchQuizDetail(id);
     if (res.status) {
-      console.log(res.data);
       setQuizQuestions(res.data.quiz);
       setQuizId(res.data.id);
       const quizzes = res.data.quiz;
@@ -76,7 +76,7 @@ const Quiz = ({navigation, route}) => {
     }
   };
 
-  const handleSelectAnswer = (index, option, state) => {
+  const handleSelectAnswer = (option) => {
     setSelectedOption(option);
   };
 
@@ -102,10 +102,10 @@ const Quiz = ({navigation, route}) => {
   const handleSubmit = async () => {
     handleNext(false);
     const correctAns = [...answers];
-    const myAns = [...selectedAnswers];
+    const myAns = [...selectedAnswers,selectedOption];
     let score = 0;
     for (let index = 0; index < correctAns.length; index++) {
-      const x = correctAns[index];
+      const x = correctAns[index]
       const y = myAns[index];
       if (x === y) {
         score++;
@@ -115,7 +115,8 @@ const Quiz = ({navigation, route}) => {
     const res = await QuizService.submitScore({
       quizId,
       score: `${score}/${correctAns.length}`,
-      quizTitle:quiz
+      quizTitle: quiz,
+      matricNo: user.matric_no,
     });
     if (res.status) {
       toast.show({
@@ -124,7 +125,7 @@ const Quiz = ({navigation, route}) => {
       });
       navigation.goBack();
     }
-    // send score to frebase
+    // send score to firebase
   };
 
   useEffect(() => {
@@ -158,7 +159,7 @@ const Quiz = ({navigation, route}) => {
             option={item}
             index={key}
             selected={selectedOption === item ? true : false}
-            onPress={state => handleSelectAnswer(key, item, state)}
+            onPress={state => handleSelectAnswer(item)}
           />
         ))}
       </View>

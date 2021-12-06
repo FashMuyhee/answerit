@@ -57,6 +57,7 @@ const ResultDetails = ({navigation, route}) => {
               <Heading fontSize="18px" color="darkBlue.800">
                 {item.studentName}
               </Heading>
+              <Text>{item.matricNo}</Text>
               <HStack space="2">
                 <Text>{item.score}</Text>
                 <Text color="textMute" fontStyle={'italic'}>
